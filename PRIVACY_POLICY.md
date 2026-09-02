@@ -68,5 +68,5 @@ We may update our Privacy Policy periodically. We will notify you of any changes
 ### 7. Contact Us
 
 If you have any questions, suggestions, or concerns regarding this Privacy Policy, please contact us at:
-* **Support Email**: `support@calcmate.app` (or update with your official developer email)
-* **Application**: CalcMate — Smart All-in-One Calculator
+* **Support Email**: `support@calcmate.app`
+* **Application**: CalcMate — All-in-One Smart Calculator
