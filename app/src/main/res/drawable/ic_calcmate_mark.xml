@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Center squircle plate -->
+    <path
+        android:pathData="M34,16 L74,16 C88,16 92,20 92,34 L92,74 C92,88 88,92 74,92 L34,92 C20,92 16,88 16,74 L16,34 C16,20 20,16 34,16 Z"
+        android:fillColor="#151E33" />
+    <path
+        android:pathData="M34,16.5 L74,16.5 C87.5,16.5 91.5,20.5 91.5,34 L91.5,74 C91.5,87.5 87.5,91.5 74,91.5 L34,91.5 C20.5,91.5 16.5,87.5 16.5,74 L16.5,34 C16.5,20.5 20.5,16.5 34,16.5 Z"
+        android:strokeColor="#3B82F6"
+        android:strokeWidth="1.5" />
+
+    <!-- Top Left: Plus (+) -->
+    <path
+        android:pathData="M41,29 L41,47 M32,38 L50,38"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round" />
+
+    <!-- Top Right: Multiply (×) -->
+    <path
+        android:pathData="M62,29 L78,45 M78,29 L62,45"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round" />
+
+    <!-- Bottom Left: Minus (−) -->
+    <path
+        android:pathData="M32,71 L50,71"
+        android:strokeColor="#A855F7"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round" />
+
+    <!-- Bottom Right: Equals (=) -->
+    <path
+        android:pathData="M62,66.5 L78,66.5 M62,75.5 L78,75.5"
+        android:strokeColor="#F472B6"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round" />
+</vector>
