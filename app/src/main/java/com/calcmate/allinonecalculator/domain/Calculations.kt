@@ -15,7 +15,26 @@ object Numbers {
 
 /** Safe recursive-descent evaluator. It never executes arbitrary code. */
 class ExpressionCalculator(private val degrees: Boolean = false) {
-    fun evaluate(input: String): Result<Double> = runCatching { Parser(input.replace("×", "*").replace("÷", "/")).parse().also { require(it.isFinite()) } }
+    fun evaluate(input: String): Result<Double> = runCatching {
+        var s = input
+            .replace("×", "*")
+            .replace("÷", "/")
+            .replace("−", "-")
+            .replace("π", "pi")
+            .replace("²", "^2")
+            .replace("³", "^3")
+            .replace("√", "sqrt")
+            .replace("∛", "cbrt")
+        
+        // Auto-close missing parentheses if user did not type closing ones
+        val openCount = s.count { it == '(' }
+        val closeCount = s.count { it == ')' }
+        if (openCount > closeCount) {
+            s += ")".repeat(openCount - closeCount)
+        }
+        Parser(s).parse().also { require(it.isFinite()) }
+    }
+
     private inner class Parser(private val s: String) {
         var p = 0
         fun parse() = expression().also { skip(); require(p == s.length) }
@@ -26,7 +45,31 @@ class ExpressionCalculator(private val degrees: Boolean = false) {
         private fun unary(): Double { skip(); if (p < s.length && (s[p] == '+' || s[p] == '-')) { val negative = s[p++] == '-'; val v = unary(); return if (negative) -v else v }; return postfix() }
         private fun postfix(): Double { var v = atom(); while (true) { skip(); when { p < s.length && s[p] == '!' -> { p++; require(v >= 0 && v <= 170 && v % 1.0 == 0.0); v = (2..v.toInt()).fold(1.0) { a, n -> a * n } }; p < s.length && s[p] == '%' -> { p++; v /= 100 }; else -> return v } } }
         private fun atom(): Double { skip(); if (p < s.length && s[p] == '(') { p++; val v = expression(); skip(); require(p < s.length && s[p++] == ')'); return v }; val start = p; while (p < s.length && (s[p].isDigit() || s[p] == '.')) p++; if (p > start) return s.substring(start, p).toDouble(); val nameStart = p; while (p < s.length && s[p].isLetter()) p++; if (p > nameStart) { val name = s.substring(nameStart, p); val value = when (name) { "pi" -> Math.PI; "e" -> Math.E; else -> { skip(); require(p < s.length && s[p++] == '('); val arg = expression(); skip(); require(p < s.length && s[p++] == ')'); function(name, arg) } }; return value }; error("Expected value") }
-        private fun function(name: String, x: Double): Double { val radians = if (degrees) Math.toRadians(x) else x; return when (name.lowercase()) { "sin" -> sin(radians); "cos" -> cos(radians); "tan" -> tan(radians); "asin" -> { val v = asin(x); if (degrees) Math.toDegrees(v) else v }; "acos" -> { val v = acos(x); if (degrees) Math.toDegrees(v) else v }; "atan" -> { val v = atan(x); if (degrees) Math.toDegrees(v) else v }; "ln" -> ln(x).also { require(it.isFinite()) }; "log" -> log10(x); "sqrt" -> sqrt(x); "abs" -> abs(x); "exp" -> exp(x); else -> error("Unknown function") }.also { require(it.isFinite()) } }
+        private fun function(name: String, x: Double): Double {
+            val radians = if (degrees) Math.toRadians(x) else x
+            return when (name.lowercase()) {
+                "sin" -> sin(radians)
+                "cos" -> cos(radians)
+                "tan" -> tan(radians)
+                "asin" -> { val v = asin(x); if (degrees) Math.toDegrees(v) else v }
+                "acos" -> { val v = acos(x); if (degrees) Math.toDegrees(v) else v }
+                "atan" -> { val v = atan(x); if (degrees) Math.toDegrees(v) else v }
+                "sinh" -> sinh(x)
+                "cosh" -> cosh(x)
+                "tanh" -> tanh(x)
+                "asinh" -> ln(x + sqrt(x * x + 1.0))
+                "acosh" -> ln(x + sqrt(x * x - 1.0))
+                "atanh" -> 0.5 * ln((1.0 + x) / (1.0 - x))
+                "ln" -> ln(x).also { require(it.isFinite()) }
+                "log" -> log10(x)
+                "log2" -> log2(x)
+                "sqrt" -> sqrt(x)
+                "cbrt" -> cbrt(x)
+                "abs" -> abs(x)
+                "exp" -> exp(x)
+                else -> error("Unknown function: $name")
+            }.also { require(it.isFinite()) }
+        }
     }
 }
 
