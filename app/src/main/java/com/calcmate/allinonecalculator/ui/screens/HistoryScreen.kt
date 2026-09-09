@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DeleteSweep
@@ -35,6 +36,7 @@ fun HistoryScreen(
     historyList: List<String>,
     onDeleteItem: (String) -> Unit = {},
     onClearHistory: () -> Unit,
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val palette = LocalCalculatorPalette.current
@@ -61,18 +63,32 @@ fun HistoryScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "History",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = palette.textPrimary
-                )
-                Text(
-                    text = "${historyList.size} calculations stored",
-                    fontSize = 13.sp,
-                    color = palette.textSecondary
-                )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (onBack != null) {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = palette.textPrimary
+                        )
+                    }
+                }
+                Column {
+                    Text(
+                        text = "History",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = palette.textPrimary
+                    )
+                    Text(
+                        text = "${historyList.size} calculations stored",
+                        fontSize = 13.sp,
+                        color = palette.textSecondary
+                    )
+                }
             }
 
             if (historyList.isNotEmpty()) {

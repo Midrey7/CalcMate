@@ -75,9 +75,13 @@ fun CalcMateMainApp(store: AppStore) {
     val history by store.historyFlow.collectAsState(initial = emptyList())
     val recent by store.recentFlow.collectAsState(initial = emptyList())
 
-    // Handle system back navigation when a tool is open
-    BackHandler(enabled = selectedToolId != null) {
-        selectedToolId = null
+    // Handle system back navigation when a tool is open or on another tab
+    BackHandler(enabled = selectedToolId != null || currentTab != 0) {
+        if (selectedToolId != null) {
+            selectedToolId = null
+        } else if (currentTab != 0) {
+            currentTab = 0
+        }
     }
 
     LaunchedEffect(selectedToolId, currentTab) {
@@ -152,6 +156,7 @@ fun CalcMateMainApp(store: AppStore) {
                         },
                         historyList = history,
                         onClearHistory = { scope.launch { store.clearHistory() } },
+                        onBack = { selectedToolId = null },
                         modifier = screenModifier
                     )
                 } else {
@@ -206,6 +211,7 @@ fun CalcMateMainApp(store: AppStore) {
                     },
                     historyList = history,
                     onClearHistory = { scope.launch { store.clearHistory() } },
+                    onBack = { currentTab = 0 },
                     modifier = screenModifier
                 )
             }
@@ -216,6 +222,7 @@ fun CalcMateMainApp(store: AppStore) {
                     historyList = history,
                     onDeleteItem = { scope.launch { store.deleteHistoryItem(it) } },
                     onClearHistory = { scope.launch { store.clearHistory() } },
+                    onBack = { currentTab = 0 },
                     modifier = screenModifier
                 )
             }
@@ -230,6 +237,7 @@ fun CalcMateMainApp(store: AppStore) {
                     precision = precision,
                     onPrecisionChange = { scope.launch { store.setPrecision(it) } },
                     onClearHistory = { scope.launch { store.clearHistory() } },
+                    onBack = { currentTab = 0 },
                     modifier = screenModifier
                 )
             }

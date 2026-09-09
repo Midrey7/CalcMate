@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -36,6 +37,7 @@ fun SettingsScreen(
     precision: Int,
     onPrecisionChange: (Int) -> Unit,
     onClearHistory: () -> Unit,
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val palette = LocalCalculatorPalette.current
@@ -52,12 +54,26 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Header
-        Text(
-            text = "Settings",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = palette.textPrimary
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = palette.textPrimary
+                    )
+                }
+            }
+            Text(
+                text = "Settings",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = palette.textPrimary
+            )
+        }
 
         // Section: Appearance
         Text(

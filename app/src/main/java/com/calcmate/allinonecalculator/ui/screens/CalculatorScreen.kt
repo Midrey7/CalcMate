@@ -38,6 +38,7 @@ fun CalculatorScreen(
     onCalculationComplete: (String, String) -> Unit,
     historyList: List<String>,
     onClearHistory: () -> Unit,
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val palette = LocalCalculatorPalette.current
@@ -188,7 +189,8 @@ fun CalculatorScreen(
                 onToggleScientific = { isScientific = !isScientific },
                 onOpenHistory = { showHistorySheet = true },
                 onBackspace = { handleKey("⌫") },
-                onClearAll = { handleKey("AC") }
+                onClearAll = { handleKey("AC") },
+                onBack = onBack
             )
         }
 

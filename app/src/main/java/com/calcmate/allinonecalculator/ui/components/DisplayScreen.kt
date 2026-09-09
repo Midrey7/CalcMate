@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
@@ -41,6 +42,7 @@ fun DisplayScreen(
     onOpenHistory: () -> Unit,
     onBackspace: () -> Unit,
     onClearAll: () -> Unit,
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val palette = LocalCalculatorPalette.current
@@ -72,14 +74,32 @@ fun DisplayScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // DEG / RAD toggle
             Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(palette.fnKeyBg)
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                if (onBack != null) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = palette.textPrimary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
+
+                // DEG / RAD toggle
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(palette.fnKeyBg)
+                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                 Surface(
                     onClick = onToggleDegrees,
                     color = if (isDegrees) palette.numKeyBg else Color.Transparent,
@@ -107,6 +127,7 @@ fun DisplayScreen(
                     )
                 }
             }
+        }
 
             // Quick actions: Scientific, History, Backspace
             Row(
